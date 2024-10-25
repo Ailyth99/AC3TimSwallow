@@ -366,28 +366,28 @@ class BMPToULZDialog(wx.Dialog):
 		panel = wx.Panel(self)
 		
 		radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
-		self.single_layer_radio = wx.RadioButton(panel, label="单层tim", style=wx.RB_GROUP)
-		self.double_layer_radio = wx.RadioButton(panel, label="双层tim")
+		self.single_layer_radio = wx.RadioButton(panel, label="Single Layer TIM", style=wx.RB_GROUP)
+		self.double_layer_radio = wx.RadioButton(panel, label="Double Layer TIM")
 		self.single_layer_radio.Bind(wx.EVT_RADIOBUTTON, self.on_radio_change)
 		self.double_layer_radio.Bind(wx.EVT_RADIOBUTTON, self.on_radio_change)
 		radio_sizer.Add(self.single_layer_radio, 0, wx.ALL, 5)
 		radio_sizer.Add(self.double_layer_radio, 0, wx.ALL, 5)
 		
-		bmp_label = wx.StaticText(panel, label="选择需要转换的BMP（若是双层tim，则按照CLUT顺序选择）")
+		bmp_label = wx.StaticText(panel, label="Select BMP to convert (For double layer TIM, select in CLUT order)")
 		self.bmp_picker = wx.FilePickerCtrl(panel, message="Select BMP file", wildcard="BMP files (*.bmp)|*.bmp")
 		
 		self.bmp_picker2 = wx.FilePickerCtrl(panel, message="Select second BMP file", wildcard="BMP files (*.bmp)|*.bmp")
 		self.bmp_picker2.Hide()
 		
-		tim_label = wx.StaticText(panel, label="选择原始TIM")
+		tim_label = wx.StaticText(panel, label="Select original TIM")
 		self.tim_picker = wx.FilePickerCtrl(panel, message="Select original TIM file", wildcard="TIM files (*.tim)|*.tim")
 		
-		self.info_text = wx.StaticText(panel, label="用于获取原始TIM的VRAM坐标")
+		self.info_text = wx.StaticText(panel, label="Used to get original TIM's VRAM coordinates")
 		
 		# Add ULZ compress checkbox
 		self.ulz_compress_checkbox = wx.CheckBox(panel, label="Compress new TIM to ULZ")
 		
-		self.process_button = wx.Button(panel, label="开始处理")
+		self.process_button = wx.Button(panel, label="Start Processing")
 		self.process_button.Bind(wx.EVT_BUTTON, self.on_process)
 		self.log_text = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_READONLY, size=(400, 100))
 		
@@ -440,14 +440,14 @@ class BMPToULZDialog(wx.Dialog):
 				tim_output_path2 = bmp_path2.replace('.bmp', '.tim')
 				bmp_to_tim(bmp_path, tim_output_path1)
 				bmp_to_tim(bmp_path2, tim_output_path2)
-				self.log_text.AppendText(f"{os.path.basename(bmp_path)} 已成功转换成 {base_name}.tim\n")
-				self.log_text.AppendText(f"{os.path.basename(bmp_path2)} 已成功转换成 {os.path.basename(tim_output_path2)}\n")
+				self.log_text.AppendText(f"{os.path.basename(bmp_path)} has been successfully converted to {base_name}.tim\n")
+				self.log_text.AppendText(f"{os.path.basename(bmp_path2)} has been successfully converted to {os.path.basename(tim_output_path2)}\n")
 				
 				# Merge TIMs
 				merged_tim_output_path = os.path.join(os.path.dirname(tim_output_path1), f"{base_name}_merged.tim")
 				print(f"Running command: bin/AC3LayerMerger.exe {tim_output_path1} {tim_output_path2} {merged_tim_output_path}")
 				subprocess.run(["bin/AC3LayerMerger.exe", tim_output_path1, tim_output_path2, merged_tim_output_path], check=True)
-				self.log_text.AppendText(f"{os.path.basename(tim_output_path1)} 和 {os.path.basename(tim_output_path2)} 已成功合并成 {os.path.basename(merged_tim_output_path)}\n开始替换VRAM坐标")
+				self.log_text.AppendText(f"{os.path.basename(tim_output_path1)} and {os.path.basename(tim_output_path2)} have been successfully merged into {os.path.basename(merged_tim_output_path)}\nStarting to replace VRAM coordinates")
 				time.sleep(2)
 					
 				# Copy VRAM coordinates from original TIM to merged TIM
@@ -459,15 +459,15 @@ class BMPToULZDialog(wx.Dialog):
 				self.set_palette_vram_coordinates(merged_memory, palette_org_x, palette_org_y)
 				with open(merged_tim_output_path, "wb") as f:
 					f.write(merged_memory)
-				self.log_text.AppendText(f"{os.path.basename(merged_tim_output_path)} 已成功获取原始VRAM坐标\n")
+				self.log_text.AppendText(f"{os.path.basename(merged_tim_output_path)} has successfully obtained original VRAM coordinates\n")
 				
 				# Compress merged TIM to ULZ if selected
 				if self.ulz_compress_checkbox.GetValue():
-					self.log_text.AppendText("开始ulz压缩...\n")
+					self.log_text.AppendText("Starting ULZ compression...\n")
 					compress_ulz(merged_tim_output_path)
-					self.log_text.AppendText(f"{os.path.basename(merged_tim_output_path)} 已经成功压缩为 {base_name}_merged.ulz\n")
+					self.log_text.AppendText(f"{os.path.basename(merged_tim_output_path)} has been successfully compressed to {base_name}_merged.ulz\n")
 				
-				self.log_text.AppendText(f"转换完成，转换的 {os.path.basename(merged_tim_output_path)} 和 {base_name}_merged.ulz 已经保存到 {os.path.dirname(bmp_path)}\n")
+				self.log_text.AppendText(f"Conversion complete, the converted {os.path.basename(merged_tim_output_path)} and {base_name}_merged.ulz have been saved to {os.path.dirname(bmp_path)}\n")
 			except Exception as e:
 				wx.MessageBox(f"Error during processing: {str(e)}", "Error", wx.OK | wx.ICON_ERROR)
 		else:
@@ -476,7 +476,7 @@ class BMPToULZDialog(wx.Dialog):
 				
 				tim_output_path = bmp_path.replace('.bmp', '.tim')
 				bmp_to_tim(bmp_path, tim_output_path)
-				self.log_text.AppendText(f"{os.path.basename(bmp_path)} 已成功转换成 {base_name}.tim\n")
+				self.log_text.AppendText(f"{os.path.basename(bmp_path)} has been successfully converted to {base_name}.tim\n")
 				
 				original_memory = open_and_read_file(tim_path)
 				new_memory = open_and_read_file(tim_output_path)
@@ -486,14 +486,14 @@ class BMPToULZDialog(wx.Dialog):
 				self.set_palette_vram_coordinates(new_memory, palette_org_x, palette_org_y)
 				with open(tim_output_path, "wb") as f:
 					f.write(new_memory)
-				self.log_text.AppendText(f"{base_name}.tim 已成功获取原始VRAM坐标\n")
+				self.log_text.AppendText(f"{base_name}.tim has successfully obtained original VRAM coordinates\n")
 				
 				if self.ulz_compress_checkbox.GetValue():
-					self.log_text.AppendText("开始ulz压缩...\n")
+					self.log_text.AppendText("Starting ULZ compression...\n")
 					compress_ulz(tim_output_path)
-					self.log_text.AppendText(f"{base_name}.tim 已经成功压缩为 {base_name}.ulz\n")
+					self.log_text.AppendText(f"{base_name}.tim has been successfully compressed to {base_name}.ulz\n")
 				
-				self.log_text.AppendText(f"转换完成，转换的 {base_name}.tim 和 {base_name}.ulz 已经保存到 {os.path.dirname(bmp_path)}\n")
+				self.log_text.AppendText(f"Conversion complete, the converted {base_name}.tim and {base_name}.ulz have been saved to {os.path.dirname(bmp_path)}\n")
 			except Exception as e:
 				wx.MessageBox(f"Error during processing: {str(e)}", "Error", wx.OK | wx.ICON_ERROR)
 

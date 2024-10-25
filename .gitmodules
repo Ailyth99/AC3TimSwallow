@@ -1,3 +1,6 @@
 [submodule "AC3-Layer-Merger"]
 	path = AC3-Layer-Merger
 	url = https://github.com/DashmanGC/AC3-Layer-Merger
+[submodule "ac3es-tools"]
+	path = ac3es-tools
+	url = https://github.com/loadwordteam/ac3es-tools
