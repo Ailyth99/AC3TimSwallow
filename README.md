@@ -3,7 +3,7 @@ This is an Ace Combat 3 Electrosphere translation tool with a GUI, providing a m
 <br>It integrates several excellent AC3 localization tools and supports previewing and processing both 4bpp and 8bpp TIM images,and modifying VRAM coordinates. For AC3 translation, it can combine two separate CLUT BMPs generated during the process into a single TIM image containing 2 CLUTs, and further compress this TIM into ULZ format.<br>
 You can generate two images with different CLUTs using [AC3-Text-Editor](https://github.com/DashmanGC/AC3-Text-Editor), and then convert them to TIM format using this tool.
 
-![1](https://free2.yunpng.top/2024/10/25/671b6ea4c98df.png)
+[![pAyUvyq.png](https://s21.ax1x.com/2024/11/07/pAyUvyq.png)](https://imgse.com/i/pAyUvyq)
 
 ## Acknowledgments
 *  [AC3-Layer-Merger](https://github.com/DashmanGC/AC3-Layer-Merger)
